@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:simple_calculator/features/calculate/presentation/cubit/calculate_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -56,9 +58,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
                   ),
                   sizeH(appH(context) / 24),
 
-                  //Numbers
+                  // Number diplay
                   BlocBuilder<CalculateCubit, CalculateState>(
                     builder: (context, state) {
+                      log(state.expression);
                       return Text(
                         state.expression,
                         style: TextStyle(
@@ -73,6 +76,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     builder: (context, state) {
                       return Text(
                         state.result,
+
                         style: TextStyle(
                           color: CColors.textSecondary,
                           fontSize: 30,
@@ -149,10 +153,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
 }
 
 class Circle extends StatelessWidget {
- final String txt ;
+  final String txt;
   final Color color;
 
- const Circle({super.key, required this.color, required this.txt});
+  const Circle({super.key, required this.color, required this.txt});
 
   @override
   Widget build(BuildContext context) {
@@ -179,13 +183,16 @@ class Circle extends StatelessWidget {
                 cubit.addValue("*");
                 break;
               case "%":
-                cubit.addValue("%");
+                cubit.persentage("%");
                 break;
               case ".":
                 cubit.addValue(".");
                 break;
               case "⌫":
                 cubit.deleteLast();
+                break;
+              case "()":
+                cubit.addParenthesis();
                 break;
               default:
                 cubit.addValue(txt);

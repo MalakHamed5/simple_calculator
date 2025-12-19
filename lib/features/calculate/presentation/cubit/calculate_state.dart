@@ -6,13 +6,15 @@ sealed class CalculateState extends Equatable {
   const CalculateState(this.expression, this.result);
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [expression, result];
 }
 
 final class CalculateInitial extends CalculateState {
-  const CalculateInitial() : super('0', '');
+  const CalculateInitial() : super('0', "0");
 }
 
 final class CalculatedUpdate extends CalculateState {
-  const CalculatedUpdate(String expression, String result) : super(expression, result);
+  const CalculatedUpdate(super.expression, super.result);
 }
+
+
