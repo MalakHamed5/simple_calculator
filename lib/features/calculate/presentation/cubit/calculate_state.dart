@@ -1,10 +1,18 @@
 part of 'calculate_cubit.dart';
 
-abstract class CalculateState extends Equatable {
-  const CalculateState();
+sealed class CalculateState extends Equatable {
+  final String expression;
+  final String result;
+  const CalculateState(this.expression, this.result);
 
   @override
   List<Object> get props => [];
 }
 
-class CalculateInitial extends CalculateState {}
+final class CalculateInitial extends CalculateState {
+  const CalculateInitial() : super('0', '');
+}
+
+final class CalculatedUpdate extends CalculateState {
+  const CalculatedUpdate(String expression, String result) : super(expression, result);
+}

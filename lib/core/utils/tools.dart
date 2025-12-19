@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../config/router/c_router.dart';
+Size appS(BuildContext context) {
+  return MediaQuery.of(context).size;
+}
 
-//context
-final ctx = CRouter.router.configuration.navigatorKey.currentState!.context;
-//MediaQuery
-final appH = appS.height;
-final appW = appS.width;
-final appS = MediaQuery.sizeOf(ctx);
-
+double appH(BuildContext context) {
+  return appS(context).height;
+}
+double appW(BuildContext context) {
+  return appS(context).width;
+}
 //--- SizedBox ---//
 SizedBox sizeH(double height) {
   return SizedBox(height: height);

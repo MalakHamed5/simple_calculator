@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:simple_calculator/features/calculate/presentation/cubit/calculate_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/const/calculator_colors.dart';
 import '../../../../core/utils/tools.dart';
 
-class CalculatorPage extends StatelessWidget {
+class CalculatorPage extends StatefulWidget {
   const CalculatorPage({super.key});
 
   @override
+  State<CalculatorPage> createState() => _CalculatorPageState();
+}
+
+class _CalculatorPageState extends State<CalculatorPage> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // extendBody: true,
       body: Column(
         children: [
           //result display
@@ -21,7 +27,7 @@ class CalculatorPage extends StatelessWidget {
                 bottomRight: Radius.circular(40),
               ),
             ),
-            height: appH * .38,
+            height: appH(context) * .38,
             //Reselt
             child: Padding(
               padding: EdgeInsets.only(bottom: 8.0, top: 60, left: 10, right: 20),
@@ -48,30 +54,38 @@ class CalculatorPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  sizeH(appH / 20),
+                  sizeH(appH(context) / 24),
 
                   //Numbers
-                  Text(
-                    "5+5",
-                    style: TextStyle(
-                      color: CColors.textPrimary,
-                      fontSize: 55,
-                      fontWeight: FontWeight.w400,
-                    ),
+                  BlocBuilder<CalculateCubit, CalculateState>(
+                    builder: (context, state) {
+                      return Text(
+                        state.expression,
+                        style: TextStyle(
+                          color: CColors.textPrimary,
+                          fontSize: 55,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      );
+                    },
                   ),
-                  Text(
-                    "10",
-                    style: TextStyle(
-                      color: CColors.textSecondary,
-                      fontSize: 30,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  BlocBuilder<CalculateCubit, CalculateState>(
+                    builder: (context, state) {
+                      return Text(
+                        state.result,
+                        style: TextStyle(
+                          color: CColors.textSecondary,
+                          fontSize: 30,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      );
+                    },
                   ),
                   Spacer(),
                   Divider(
                     thickness: 5,
-                    indent: appW / 2.4,
-                    endIndent: appW / 2.4,
+                    indent: appW(context) / 2.4,
+                    endIndent: appW(context) / 2.4,
                     color: CColors.textSecondary,
                   ),
                 ],
@@ -90,14 +104,7 @@ class CalculatorPage extends StatelessWidget {
                     Circle(txt: "AC", color: CColors.buttonEqual),
                     Circle(txt: "()", color: CColors.buttonOperator),
                     Circle(txt: "÷", color: CColors.buttonOperator),
-                    SizedBox(
-                      width: appW * 0.23,
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundColor: CColors.buttonOperator,
-                        child: Icon(Icons.backspace, color: CColors.textPrimary),
-                      ),
-                    ),
+                    Circle(txt: "⌫", color: CColors.buttonOperator),
                   ],
                 ),
                 Row(
@@ -141,24 +148,49 @@ class CalculatorPage extends StatelessWidget {
   }
 }
 
-// circle around every tirm
 class Circle extends StatelessWidget {
-  const Circle({super.key, required this.txt, required this.color, this.onPressed});
-
-  final String txt;
+ final String txt ;
   final Color color;
-  final void Function()? onPressed;
+
+ const Circle({super.key, required this.color, required this.txt});
 
   @override
   Widget build(BuildContext context) {
+    final cubit = context.read<CalculateCubit>();
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 3),
-      width: appW * .23,
+      width: appW(context) * .23,
       child: CircleAvatar(
-        radius: 50,
+        radius: 42,
         backgroundColor: color,
         child: TextButton(
-          onPressed: onPressed,
+          onPressed: () {
+            switch (txt) {
+              case "AC":
+                cubit.clear();
+                break;
+              case "=":
+                cubit.calculated();
+                break;
+              case "÷":
+                cubit.addValue("/");
+                break;
+              case "×":
+                cubit.addValue("*");
+                break;
+              case "%":
+                cubit.addValue("%");
+                break;
+              case ".":
+                cubit.addValue(".");
+                break;
+              case "⌫":
+                cubit.deleteLast();
+                break;
+              default:
+                cubit.addValue(txt);
+            }
+          },
           child: Text(
             txt,
             style: TextStyle(

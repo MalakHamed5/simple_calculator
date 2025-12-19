@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:simple_calculator/core/config/router/c_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:simple_calculator/features/calculate/presentation/cubit/calculate_cubit.dart';
+import 'package:simple_calculator/features/calculate/presentation/pages/calculate_page.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
@@ -18,6 +20,9 @@ class Calculator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(debugShowCheckedModeBanner: false, routerConfig: CRouter.router);
+    return BlocProvider(
+      create: (context) => CalculateCubit(),
+      child: MaterialApp(debugShowCheckedModeBanner: false, home: const CalculatorPage()),
+    );
   }
 }
